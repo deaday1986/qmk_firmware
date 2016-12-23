@@ -7,6 +7,11 @@ enum layer {
   _MOVE
 };
 
+enum tap_dance {
+  _LSHIFT_CAPSLOCK,
+  _RSHIFT_CAPSLOCK
+};
+
 enum keycode {
   // Fillers to make layering more clear
   _______ = KC_TRANSPARENT,
@@ -15,6 +20,8 @@ enum keycode {
   // Shortcuts to longer keycodes to keep the layout definition compact
   LOWER = MO(_LOWER),
   RAISE = MO(_RAISE),
+  LSFT_CL = TD(_LSHIFT_CAPSLOCK),
+  RSFT_CL = TD(_RSHIFT_CAPSLOCK),
   MOVE_SP = LT(_MOVE, KC_SPC)
 };
 
@@ -26,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | Tab  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  | Enter|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  | Shift|
+ * |Sft/CL|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Sft/CL|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | Ctrl |  GUI |  Alt |      | Lower|Mov/Sp|Mov/Sp| Raise|      |  Alt |  GUI | Ctrl |
  * `-----------------------------------------------------------------------------------'
@@ -34,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_QWERTY] = {
   {KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC},
   {KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT },
-  {KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT},
+  {LSFT_CL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, RSFT_CL},
   {KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, LOWER,   MOVE_SP, MOVE_SP, RAISE,   XXXXXXX, KC_RALT, KC_RGUI, KC_RCTL}
 },
 
@@ -82,14 +89,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |  Alt |      |      |      |      |      |      |      |      |  Alt |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |Shift |Shift |      |      |      |      |      |
+ * |      |      |      |      |      |Sft/CL|Sft/CL|      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_MOVE] = {
   {_______, KC_INS,  KC_HOME, KC_UP,   KC_END,  KC_PGUP, KC_PGUP, KC_HOME, KC_UP,   KC_END,  KC_DEL,  _______},
   {_______, KC_LCTL, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_RCTL, _______},
   {_______, KC_LALT, _______, _______, _______, _______, _______, _______, _______, _______, KC_RALT, _______},
-  {_______, _______, _______, _______, _______, KC_LSFT, KC_RSFT, _______, _______, _______, _______, _______}
+  {_______, _______, _______, _______, _______, LSFT_CL, RSFT_CL, _______, _______, _______, _______, _______}
 }
 
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [_LSHIFT_CAPSLOCK] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
+  [_RSHIFT_CAPSLOCK] = ACTION_TAP_DANCE_DOUBLE(KC_RSFT, KC_CAPS)
 };
